@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
-import { STORAGE_KEYS, getItem, removeItem, setItem } from "./storage";
+import { STORAGE_KEYS, getItem, removeItem, setItem } from "./storage.js";
 
 const testSchema = z.object({ name: z.string(), age: z.number() });
 const KEY = STORAGE_KEYS.session;
