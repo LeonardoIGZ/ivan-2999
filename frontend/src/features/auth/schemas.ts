@@ -40,6 +40,6 @@ export const SessionSchema = z.object({
     createdAt: z.iso.datetime()
 });
 
-export const usersSchema = z.record(z.string(), UserProfileSchema);
+export const UserRecordsSchema = z.record(z.string(), UserProfileSchema);
 
-export const passwordRecordsSchema = z.record(z.string(), PasswordRecordSchema);
+export const PasswordRecordsSchema = z.record(z.string(), PasswordRecordSchema);
