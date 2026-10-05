@@ -15,3 +15,20 @@ export type AuthError = "EMAIL_TAKEN" | "INVALID_CREDENTIALS" | "STORAGE_ERROR";
 export type AuthResult =
     | { ok: true; user: UserProfile }
     | { ok: false; error: AuthError };
+
+// tipos para las graficas
+export interface RaceResult {
+    race: number;
+    winner: string;
+    userPick: string;
+}
+
+export interface SnailWins {
+    snail: string;
+    wins: number;
+}
+
+export interface BetSummary {
+    won: number;
+    lost: number;
+}

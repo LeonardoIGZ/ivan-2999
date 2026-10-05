@@ -1,11 +1,26 @@
+import { useMemo } from "react";
 import { ShellMark } from "../features/auth/components/ShellMark";
 import { useAuth } from "../features/auth/context/useAuth";
+import { BetsDonutChart } from "../features/dashboard/components/BetsDonutChart";
+import { RaceWinsBarChart } from "../features/dashboard/components/RaceWinsBarChart";
+import {
+    RACES_PER_DAY,
+    countWins,
+    simulateRaceDay,
+    summarizedBets,
+} from "../features/dashboard/simulation";
 
 // Si guardas el saldo en centavos, divide entre 100 antes de formatear.
 const currency = new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" });
 
 export function DashboardPage() {
     const { user, logout } = useAuth();
+
+    // Se simula un día de carreras una vez por montaje del componente.
+    const { wins, bets } = useMemo(() => {
+        const results = simulateRaceDay();
+        return { wins: countWins(results), bets: summarizedBets(results) };
+    }, []);
 
     // ProtectedRoute garantiza que hay sesión; esto solo satisface al tipado.
     if (!user) return null;
@@ -46,6 +61,36 @@ export function DashboardPage() {
                         {currency.format(user.balance)}
                     </p>
                 </section>
+
+                <div className="mt-12 grid gap-6 lg:grid-cols-[2fr_3fr]">
+                    <section
+                        aria-labelledby="bets-heading"
+                        className="rounded-xl border border-line bg-white/60 p-6"
+                    >
+                        <h2 id="bets-heading" className="font-display text-lg font-semibold">
+                            Tus apuestas de hoy
+                        </h2>
+                        <p className="mt-1 text-sm text-ink/60">Una apuesta por carrera.</p>
+                        <div className="mt-4">
+                            <BetsDonutChart data={bets} />
+                        </div>
+                    </section>
+
+                    <section
+                        aria-labelledby="wins-heading"
+                        className="rounded-xl border border-line bg-white/60 p-6"
+                    >
+                        <h2 id="wins-heading" className="font-display text-lg font-semibold">
+                            Victorias por caracol
+                        </h2>
+                        <p className="mt-1 text-sm text-ink/60">
+                            Resultados de las {RACES_PER_DAY} carreras del día.
+                        </p>
+                        <div className="mt-4">
+                            <RaceWinsBarChart data={wins} />
+                        </div>
+                    </section>
+                </div>
             </main>
         </div>
     );
